@@ -44,11 +44,11 @@ Para mejorar la experiencia del juego y brindar a los jugadores la posibilidad d
 ### <span style="color:#366091">3.4. Estructura del Proyecto</span>
 ```
 /backgammon/
-├── core/           → lógica del juego
-├── cli/            → CLI
-├── pygame_ui/      → interfaz gráfica
-├── assets/         → imágenes, sonidos
-├── tests/          → tests
+├── core/             → lógica del juego
+├── cli/              → CLI
+├── pygame_ui/        → interfaz gráfica
+├── assets/           → imágenes, sonidos
+├── tests/            → tests
 └── requirements.txt
 ```
 
@@ -139,7 +139,7 @@ Los sprints establecidos para las presentaciones intermedias tendrán un plazo d
 
 Cada sprint deberá contener al menos 10 commits de fecha diferente en el repositorio oficial entregado por la asignatura, no se permitirá el uso de repositorio personal. En el caso de no alcanzar el requisito establecido, el repositorio deberá contar con al menos 6 commits acumulando los 4 faltantes para el siguiente sprint, la cantidad de faltantes nunca podrá exceder en ningún caso el valor de 4. La falla en este requisito implica quedar fuera del cursado de la materia.
 
-Debe agregarse obligatoriamente al repositorio un archivo `CHANGELOG.md` de acuerdo a los criterios recomendados en [https://keepachangelog.com/en/1.1.0/]([https://keepachangelog.com/en/1.1.0/) en el que se podrá apreciar las tareas realizadas en cada sprint. La falla en este requisito implica quedar fuera del cursado de la materia.
+Debe agregarse obligatoriamente al repositorio un archivo `CHANGELOG.md` de acuerdo a los criterios recomendados en [https://keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/) en el que se podrá apreciar las tareas realizadas en cada sprint. La falla en este requisito implica quedar fuera del cursado de la materia.
 
 El desarrollo del trabajo debe cumplir los principios SOLID que garantizan la aplicación correcta del paradigma orientado a objetos. No existe justificación para dejar partes no orientadas a objeto dentro del desarrollo del trabajo.
 
@@ -147,7 +147,7 @@ Todos los atributos de todas las clases deben contener como prefijo y postfijo l
 
 La aplicación debe incluir documentación del “estilo” Docstrings donde se indique por cada función la información relevante, mínimo lo que la función recibe, lo que la función hace y lo que la función devuelve. 
 
-[https://realpython.com/documenting-python-code/]([https://realpython.com/documenting-python-code/)
+[https://realpython.com/documenting-python-code/](https://realpython.com/documenting-python-code/)
 
 El repositorio contendrá un archivo `README.md` con una explicación detallada de cómo debe ponerse en funcionamiento el Backgammon para modo testing y para modo juego desplegados ambos con Docker.
 
@@ -170,7 +170,7 @@ Para facilitar la investigación, todo alumno debe conservar y mantener:
 En caso de que el alumno no pueda aportar trazabilidad suficiente para demostrar autoría, se aplicarán las sanciones que determine el equipo docente.
 
 ## <span style="color:#366091">7. Referencias
-[https://es.wikipedia.org/wiki/Backgammon]([https://es.wikipedia.org/wiki/Backgammon)
-[https://www.pygame.org/docs/]([https://www.pygame.org/docs/)
-[https://realpython.com/documenting-python-code/]([https://realpython.com/documenting-python-code/)
-[https://keepachangelog.com/en/1.1.0/]([https://keepachangelog.com/en/1.1.0/)
+[https://es.wikipedia.org/wiki/Backgammon](https://es.wikipedia.org/wiki/Backgammon)  
+[https://www.pygame.org/docs/](https://www.pygame.org/docs/)  
+[https://realpython.com/documenting-python-code/](https://realpython.com/documenting-python-code/)  
+[https://keepachangelog.com/en/1.1.0/](https://keepachangelog.com/en/1.1.0/)
