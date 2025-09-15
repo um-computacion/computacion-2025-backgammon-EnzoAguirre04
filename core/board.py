@@ -6,7 +6,7 @@ Carrera: Ingeniería en Informática.
 Ruta: "computacion-2025-backgammon-EnzoAguirre04/core/board.py".
 """
 
-# Inicio del código.
+### Inicio del código.
 
 ## Inicio de imports.
 
@@ -59,7 +59,7 @@ class Point:
         Raises:
             ValueError: Si el valor inicial de __count_internal__ es negativo.
         """
-        # Usar el setter para validar el valor inicial
+        # Se usa el setter para validar el valor inicial.
         self.__count__ = self.__count_internal__
 
     def __repr__(self) -> str:
@@ -97,8 +97,8 @@ class Board:
             None
         """
         self.__points__: List[Point] = [Point(None, 0) for _ in range(24)]
-        self.__bar__ = {"X": 0, "O": 0}  ### Fichas en la barra.
-        self.__off__ = {"X": 0, "O": 0}  ### Fichas retiradas del juego.
+        self.__bar__ = {"X": 0, "O": 0}  # Fichas en la barra.
+        self.__off__ = {"X": 0, "O": 0}  # Fichas retiradas del juego.
         self.__reset_to_standard__()
 
     def __reset_to_standard__(self):
@@ -111,7 +111,7 @@ class Board:
             None
         """
         layout = [
-            (0, 'X', 2),  ### Punto 1 (index 0): 2 de X.
+            (0, 'X', 2),  # Punto 1 (index 0): 2 de X.
             (11, 'X', 5),
             (16, 'X', 3),
             (18, 'X', 5),
@@ -120,10 +120,10 @@ class Board:
             (7, 'O', 3),
             (5, 'O', 5),
         ]
-        ### Limpiar.
+        # Limpiar.
         for i in range(24):
             self.__points__[i] = Point(None, 0)
-        ### Colocar según layout.
+        # Colocar según layout.
         for idx, owner, cnt in layout:
             self.__points__[idx].__owner__ = owner
             self.__points__[idx].__count__ = cnt
@@ -153,31 +153,44 @@ class Board:
         Returns:
             bool: True si el movimiento fue exitoso, False si no es válido.
 
-        Reglas básicas implementadas:
+        Reglas implementadas:
         - No permite mover desde un punto vacío o de otro jugador.
         - Bloquea mover a un punto con 2 o más fichas del oponente.
         - Si hay una ficha del oponente, la golpea (se envía a la barra).
+        - Valida la dirección del movimiento (X: hacia puntos mayores, O: hacia puntos menores).
         """
+        # Validar índices.
         if src < 0 or src >= 24 or dst < 0 or dst >= 24:
             return False
+        
+        # Validar que el punto de origen pertenece al jugador.
         if not self.__is_point_owned_by__(src, player):
+            return False
+
+        # Validar dirección del movimiento.
+        if player == 'X' and dst <= src:  # X debe moverse hacia puntos mayores.
+            return False
+        if player == 'O' and dst >= src:  # O debe moverse hacia puntos menores.
             return False
 
         dest_point = self.__points__[dst]
         opponent = 'O' if player == 'X' else 'X'
 
-        ### Comprobar bloqueo (punto con 2+ fichas del oponente).
+        # Comprobar bloqueo (punto con 2+ fichas del oponente).
         if dest_point.__owner__ == opponent and dest_point.__count__ >= 2:
             return False
 
-        ### Remover ficha del punto origen.
-        self.__points__[src].__count__ -= 1
-        if self.__points__[src].__count__ == 0:
-            self.__points__[src].__owner__ = None
-
-        ### Resolver destino: golpe o movimiento normal.
+        # Remover ficha del punto origen.
+        try:
+            self.__points__[src].__count__ -= 1
+            if self.__points__[src].__count__ == 0:
+                self.__points__[src].__owner__ = None
+        except ValueError:
+            return False  # No se puede mover si __count__ se fuera a volver negativo.
+        
+        # Resolver destino: golpe o movimiento normal
         if dest_point.__owner__ == opponent and dest_point.__count__ == 1:
-            ### Golpear ficha y mandarla a la barra.
+            # Golpear ficha y mandarla a la barra
             self.__bar__[opponent] += 1
             self.__points__[dst].__owner__ = player
             self.__points__[dst].__count__ = 1
@@ -192,4 +205,4 @@ class Board:
 
 ## Fin de la clase «Board».
 
-# Fin del código.
+### Fin del código.
