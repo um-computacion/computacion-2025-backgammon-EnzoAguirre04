@@ -22,12 +22,45 @@ class Point:
     """Representa un punto (casilla) del tablero."""
     
     __owner__: Optional[str]
-    __count__: int = 0
+    __count_internal__: int = 0
     """
     Atributos:
         __owner__: (Optional[str]): 'X', 'O' o None según quién tiene fichas en el punto.
-        __count__: (int): Cantidad de fichas en el punto.
+        __count_internal__: (int): Cantidad de fichas en el punto (no negativa).
     """
+    @property
+    def __count__(self) -> int:
+        """
+        Obtiene el valor de __count__.
+
+        Returns:
+            int: Cantidad de fichas en el punto.
+        """
+        return self.__count_internal__
+
+    @__count__.setter
+    def __count__(self, value: int) -> None:
+        """
+        Establece el valor de __count__, asegurando que no sea negativo.
+
+        Args:
+            value (int): Nueva cantidad de fichas.
+        Raises:
+            ValueError: Si el valor es negativo.
+        """
+        if value < 0:
+            raise ValueError("El número de fichas no puede ser negativo")
+        self.__count_internal__ = value
+
+    def __post_init__(self):
+        """
+        Valida y establece el valor inicial de __count__.
+
+        Raises:
+            ValueError: Si el valor inicial de __count_internal__ es negativo.
+        """
+        # Usar el setter para validar el valor inicial
+        self.__count__ = self.__count_internal__
 
     def __repr__(self) -> str:
         """
