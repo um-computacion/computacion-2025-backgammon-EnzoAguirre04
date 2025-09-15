@@ -26,7 +26,7 @@ class Point:
     """
     Atributos:
         __owner__: (Optional[str]): 'X', 'O' o None según quién tiene fichas en el punto.
-        __count_internal__: (int): Cantidad de fichas en el punto (no negativa).
+        __count__: (int): Cantidad de fichas en el punto (no negativa).
     """
     @property
     def __count__(self) -> int:
@@ -83,8 +83,9 @@ class Board:
     """
     Representa el tablero de Backgammon.
     - Contiene 24 puntos numerados (0 a 23).
-    - Mantiene registro de fichas en la barra y fichas fuera.
-    - Permite aplicar movimientos simples y reiniciar el tablero a la disposición inicial.
+    - Mantiene registro de fichas en la barra y fichas retiradas.
+    - Permite aplicar movimientos simples, desde la barra, y retiro de fichas.
+    - Valida reglas del tablero (índices, propiedad, dirección, bloqueo).
     """
 
     def __init__(self):
@@ -110,6 +111,10 @@ class Board:
         Returns:
             None
         """
+        # Limpiar el tablero.
+        for i in range(24):
+            self.__points__[i] = Point(None, 0)
+        # Disposición estándar del tablero.
         layout = [
             (0, 'X', 2),  # Punto 1 (index 0): 2 de X.
             (11, 'X', 5),
@@ -120,10 +125,7 @@ class Board:
             (7, 'O', 3),
             (5, 'O', 5),
         ]
-        # Limpiar.
-        for i in range(24):
-            self.__points__[i] = Point(None, 0)
-        # Colocar según layout.
+        # Colocar según el layout.
         for idx, owner, cnt in layout:
             self.__points__[idx].__owner__ = owner
             self.__points__[idx].__count__ = cnt
@@ -140,6 +142,21 @@ class Board:
         """
         p = self.__points__[index]
         return p.__owner__ == player and p.__count__ > 0
+    
+    def __can_bear_off__(self, player: str) -> bool:
+        """
+        Verifica si el jugador puede retirar fichas (todas en el cuarto final).
+
+        Args:
+            player (str): Jugador ('X' o 'O').
+        Returns:
+            bool: True si todas las fichas están en el cuarto final, False en caso contrario.
+        """
+        home_board = range(18, 24) if player == 'X' else range(0, 6)
+        for i in range(24):
+            if i not in home_board and self.__is_point_owned_by__(i, player):
+                return False
+        return self.__bar__[player] == 0  # No debe haber fichas en la barra.
 
     def __apply_move__(self, src: int, dst: int, player: str) -> bool:
         """
@@ -154,40 +171,70 @@ class Board:
             bool: True si el movimiento fue exitoso, False si no es válido.
 
         Reglas implementadas:
+        - Permite mover desde la barra (src = -1) al punto correcto según el jugador.
+        - Permite retirar fichas (dst = 24 para X, dst = -1 para O) si todas están en el cuarto final.
         - No permite mover desde un punto vacío o de otro jugador.
-        - Bloquea mover a un punto con 2 o más fichas del oponente.
+        - Bloquea mover a un punto con 2+ fichas del oponente.
         - Si hay una ficha del oponente, la golpea (se envía a la barra).
         - Valida la dirección del movimiento (X: hacia puntos mayores, O: hacia puntos menores).
         """
-        # Validar índices.
-        if src < 0 or src >= 24 or dst < 0 or dst >= 24:
+        # Validación de índices.
+        if src < -1 or src >= 24 or dst < -1 or dst > 24:
             return False
         
-        # Validar que el punto de origen pertenece al jugador.
-        if not self.__is_point_owned_by__(src, player):
-            return False
-
-        # Validar dirección del movimiento.
-        if player == 'X' and dst <= src:  # X debe moverse hacia puntos mayores.
-            return False
-        if player == 'O' and dst >= src:  # O debe moverse hacia puntos menores.
-            return False
-
+        # Validación de movimientos desde la barra (src = -1).
+        if src == -1:
+            if self.__bar__[player] == 0:
+                return False  # No hay fichas en la barra.
+            # El destino debe ser calculado externamente (en Dice), pero se valida que que no esté bloqueado.
+            dest_point = self.__points__[dst] if dst in range(24) else None
+            opponent = 'O' if player == 'X' else 'X'
+            if dest_point and dest_point.__owner__ == opponent and dest_point.__count__ >= 2:
+                return False  # Destino bloqueado.
+        else:
+            # Validar que el punto de origen pertenece al jugador.
+            if not self.__is_point_owned_by__(src, player):
+                return False
+            # Validar la dirección del movimiento (no aplica para retiro).
+            if dst < 24 and player == 'X' and dst <= src:
+                return False
+            if dst >= 0 and player == 'O' and dst >= src:
+                return False
+        
+        # Validación del retiro de fichas.
+        if (player == 'X' and dst == 24) or (player == 'O' and dst == -1):
+            if not self.__can_bear_off__(player):
+                return False  # No todas las fichas están en el cuarto final.
+            # Retirar ficha.
+            if src == -1:
+                self.__bar__[player] -= 1
+            else:
+                try:
+                    self.__points__[src].__count__ -= 1
+                    if self.__points__[src].__count__ == 0:
+                        self.__points__[src].__owner__ = None
+                except ValueError:
+                    return False
+            self.__off__[player] += 1
+            return True
+        
+        # Validación del destino (no bloqueado).
         dest_point = self.__points__[dst]
         opponent = 'O' if player == 'X' else 'X'
-
-        # Comprobar bloqueo (punto con 2+ fichas del oponente).
         if dest_point.__owner__ == opponent and dest_point.__count__ >= 2:
             return False
 
-        # Remover ficha del punto origen.
-        try:
-            self.__points__[src].__count__ -= 1
-            if self.__points__[src].__count__ == 0:
-                self.__points__[src].__owner__ = None
-        except ValueError:
-            return False  # No se puede mover si __count__ se fuera a volver negativo.
-        
+        # Remover ficha del origen.
+        if src == -1:
+            self.__bar__[player] -= 1
+        else:
+            try:
+                self.__points__[src].__count__ -= 1
+                if self.__points__[src].__count__ == 0:
+                    self.__points__[src].__owner__ = None
+            except ValueError:
+                return False
+
         # Resolver destino: golpe o movimiento normal
         if dest_point.__owner__ == opponent and dest_point.__count__ == 1:
             # Golpear ficha y mandarla a la barra
