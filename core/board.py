@@ -8,6 +8,8 @@ Ruta: "computacion-2025-backgammon-EnzoAguirre04/core/board.py".
 
 ### Inicio del código.
 
+## Inicio.
+
 ## Inicio de imports.
 
 from dataclasses import dataclass
@@ -25,9 +27,10 @@ class Point:
     __count_internal__: int = 0
     """
     Atributos:
-        __owner__: (Optional[str]): 'X', 'O' o None según quién tiene fichas en el punto.
-        __count__: (int): Cantidad de fichas en el punto (no negativa).
+        __owner__ (Optional[str]): 'X', 'O' o None según quién tiene fichas en el punto.
+        __count__ (int): Cantidad de fichas en el punto (no negativa).
     """
+
     @property
     def __count__(self) -> int:
         """
@@ -59,15 +62,12 @@ class Point:
         Raises:
             ValueError: Si el valor inicial de __count_internal__ es negativo.
         """
-        # Se usa el setter para validar el valor inicial.
         self.__count__ = self.__count_internal__
 
     def __repr__(self) -> str:
         """
         Devuelve una representación en cadena del punto para depuración.
 
-        Args:
-            None
         Returns:
             str: Representación del punto (ej. 'X2' para 2 fichas de X, ' . ' si está vacío).
         """
@@ -142,7 +142,7 @@ class Board:
         """
         p = self.__points__[index]
         return p.__owner__ == player and p.__count__ > 0
-    
+
     def __can_bear_off__(self, player: str) -> bool:
         """
         Verifica si el jugador puede retirar fichas (todas en el cuarto final).
@@ -150,7 +150,7 @@ class Board:
         Args:
             player (str): Jugador ('X' o 'O').
         Returns:
-            bool: True si todas las fichas están en el cuarto final, False en caso contrario.
+            bool: True si todas las fichas están en el cuarto final y no hay fichas en la barra, False en caso contrario.
         """
         home_board = range(18, 24) if player == 'X' else range(0, 6)
         for i in range(24):
@@ -160,11 +160,11 @@ class Board:
 
     def __apply_move__(self, src: int, dst: int, player: str) -> bool:
         """
-        Aplica un movimiento simple de src → dst para el jugador.
+        Aplica un movimiento de src a dst para el jugador, incluyendo barra y retiro.
 
         Args:
-            src (int): Índice del punto de origen (0 a 23).
-            dst (int): Índice del punto de destino (0 a 23).
+            src (int): Índice del punto de origen (-1 para barra, 0 a 23 para puntos).
+            dst (int): Índice del punto de destino (-1 para retiro de O, 0 a 23 para puntos, 24 para retiro de X).
             player (str): Jugador ('X' o 'O').
 
         Returns:
@@ -177,16 +177,17 @@ class Board:
         - Bloquea mover a un punto con 2+ fichas del oponente.
         - Si hay una ficha del oponente, la golpea (se envía a la barra).
         - Valida la dirección del movimiento (X: hacia puntos mayores, O: hacia puntos menores).
+
+        Nota: La validación del valor del dado se maneja en dice.py.
         """
         # Validación de índices.
         if src < -1 or src >= 24 or dst < -1 or dst > 24:
             return False
-        
-        # Validación de movimientos desde la barra (src = -1).
+
+        # Validación de movimientos desde la barra.
         if src == -1:
             if self.__bar__[player] == 0:
                 return False  # No hay fichas en la barra.
-            # El destino debe ser calculado externamente (en Dice), pero se valida que que no esté bloqueado.
             dest_point = self.__points__[dst] if dst in range(24) else None
             opponent = 'O' if player == 'X' else 'X'
             if dest_point and dest_point.__owner__ == opponent and dest_point.__count__ >= 2:
@@ -200,7 +201,7 @@ class Board:
                 return False
             if dst >= 0 and player == 'O' and dst >= src:
                 return False
-        
+
         # Validación del retiro de fichas.
         if (player == 'X' and dst == 24) or (player == 'O' and dst == -1):
             if not self.__can_bear_off__(player):
@@ -217,7 +218,7 @@ class Board:
                     return False
             self.__off__[player] += 1
             return True
-        
+
         # Validación del destino (no bloqueado).
         dest_point = self.__points__[dst]
         opponent = 'O' if player == 'X' else 'X'
@@ -235,9 +236,9 @@ class Board:
             except ValueError:
                 return False
 
-        # Resolver destino: golpe o movimiento normal
+        # Resolver destino: golpe o movimiento normal.
         if dest_point.__owner__ == opponent and dest_point.__count__ == 1:
-            # Golpear ficha y mandarla a la barra
+            # Golpear ficha y mandarla a la barra.
             self.__bar__[opponent] += 1
             self.__points__[dst].__owner__ = player
             self.__points__[dst].__count__ = 1
@@ -251,5 +252,7 @@ class Board:
         return True
 
 ## Fin de la clase «Board».
+
+## Fin.
 
 ### Fin del código.
