@@ -18,19 +18,33 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 - **`Y (minor)`** representa nuevas funcionalidades agregadas dentro de la misma etapa.
 - **`Z (patch)`** representa correcciones de errores o mejoras menores.
 
-## [Unreleased] - 2025-09-14 - Segundo Sprint
+## [Unreleased] - Segundo Sprint
 
-### Añadido
+### Sin cambios hasta ahora...
 
-- Estructura del CHANGELOG.md con versiones [0.1.0] y [Unreleased].
+## [0.2.0] - 2025-09-15 - Segundo Sprint
+
+### Añadido:
+
+- Estructura del CHANGELOG.md con versiones [0.1.0], [0.2.0] y [Unreleased].
+- En **[board.py]**:
+    - Creación de la clase `Point` para representar un punto del tablero.
+    - Creación de la clase `Board` con inicialización, disposición estándar, y movimientos básicos.
+    - Adición de validaciones en `Board` (índices, propiedad, dirección, bloqueo, golpeo, no negativo).
+    - Soporte para movimientos desde la barra (`src = -1`) y retiro de fichas (`dst = 24` para `X`, `dst = -1` para `O`).
+    - Añadidos comentarios varios y docstrings según lo especificado en [CONSIGNA.md].
 
 ## [0.1.0] - 2025-09-03 - Primer Sprint
 
-### Añadido
+### Añadido:
 
 - Carpetas y archivos varios vacíos.
 - README.md simple con estructura básica del proyecto.
 - Consigna del proyecto en formato Markdown.
 
-[Unreleased]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.1.0...HEAD
+[board.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/707edb196d262bd3792a01b9dcab59bba3312522/core/board.py
+[CONSIGNA.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/707edb196d262bd3792a01b9dcab59bba3312522/docs/CONSIGNA.md
+
+[Unreleased]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/releases/tag/v0.1.0
