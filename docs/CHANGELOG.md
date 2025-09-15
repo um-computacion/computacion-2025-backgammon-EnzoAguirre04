@@ -20,13 +20,16 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 
 ## [Unreleased] - Segundo Sprint
 
-### Sin cambios hasta ahora...
+### Añadido:
+- Añadido el enlace del [CHANGELOG.md] en este mismo archivo.
+
+### Arreglado:
+- Enlances de [board.py] y [CONSIGNA.md] arreglados.
 
 ## [0.2.0] - 2025-09-15 - Segundo Sprint
 
 ### Añadido:
-
-- Estructura del CHANGELOG.md con versiones [0.1.0], [0.2.0] y [Unreleased].
+- Estructura del [CHANGELOG.md] con versiones [0.1.0], [0.2.0] y [Unreleased].
 - En **[board.py]**:
     - Creación de la clase `Point` para representar un punto del tablero.
     - Creación de la clase `Board` con inicialización, disposición estándar, y movimientos básicos.
@@ -37,13 +40,13 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 ## [0.1.0] - 2025-09-03 - Primer Sprint
 
 ### Añadido:
-
 - Carpetas y archivos varios vacíos.
 - README.md simple con estructura básica del proyecto.
 - Consigna del proyecto en formato Markdown.
 
-[board.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/707edb196d262bd3792a01b9dcab59bba3312522/core/board.py
-[CONSIGNA.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/707edb196d262bd3792a01b9dcab59bba3312522/docs/CONSIGNA.md
+[board.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/core/board.py
+[CONSIGNA.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/docs/CONSIGNA.md
+[CHANGELOG.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/docs/CHANGELOG.md
 
 [Unreleased]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.1.0...v0.2.0
