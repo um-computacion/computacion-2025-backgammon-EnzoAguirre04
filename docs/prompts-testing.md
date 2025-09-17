@@ -1,0 +1,457 @@
+# Prompts de Testing
+
+## Prompt 1 (GPT-5):
+
+### Yo:
+Hola, ChatGPT, ¿me podrías recomendar test unitarios para el siguiente código?:
+```
+### Inicio del código.
+
+## Inicio de imports.
+
+from dataclasses import dataclass
+from typing import Optional, List
+
+## Fin de imports.
+
+## Inicio de la clase «Point».
+
+@dataclass
+class Point:
+    """Representa un punto (casilla) del tablero."""
+    
+    __owner__: Optional[str]
+    __count_internal__: int = 0
+    """
+    Atributos:
+        __owner__ (Optional[str]): 'X', 'O' o None según quién tiene fichas en el punto.
+        __count__ (int): Cantidad de fichas en el punto (no negativa).
+    """
+
+    @property
+    def __count__(self) -> int:
+        """
+        Obtiene el valor de __count__.
+
+        Returns:
+            int: Cantidad de fichas en el punto.
+        """
+        return self.__count_internal__
+
+    @__count__.setter
+    def __count__(self, value: int) -> None:
+        """
+        Establece el valor de __count__, asegurando que no sea negativo.
+
+        Args:
+            value (int): Nueva cantidad de fichas.
+        Raises:
+            ValueError: Si el valor es negativo.
+        """
+        if value < 0:
+            raise ValueError("El número de fichas no puede ser negativo")
+        self.__count_internal__ = value
+
+    def __post_init__(self):
+        """
+        Valida y establece el valor inicial de __count__.
+
+        Raises:
+            ValueError: Si el valor inicial de __count_internal__ es negativo.
+        """
+        self.__count__ = self.__count_internal__
+
+    def __repr__(self) -> str:
+        """
+        Devuelve una representación en cadena del punto para depuración.
+
+        Returns:
+            str: Representación del punto (ej. 'X2' para 2 fichas de X, ' . ' si está vacío).
+        """
+        if self.__owner__ is None or self.__count__ == 0:
+            return " . "
+        return f"{self.__owner__}{self.__count__}"
+
+## Fin de la clase «Point».
+
+## Inicio de la clase «Board».
+
+class Board:
+    """
+    Representa el tablero de Backgammon.
+    - Contiene 24 puntos numerados (0 a 23).
+    - Mantiene registro de fichas en la barra y fichas retiradas.
+    - Permite aplicar movimientos simples, desde la barra, y retiro de fichas.
+    - Valida reglas del tablero (índices, propiedad, dirección, bloqueo).
+    """
+
+    def __init__(self):
+        """
+        Inicializa un tablero vacío y lo coloca en la configuración estándar.
+
+        Args:
+            None
+        Returns:
+            None
+        """
+        self.__points__: List[Point] = [Point(None, 0) for _ in range(24)]
+        self.__bar__ = {"X": 0, "O": 0}  # Fichas en la barra.
+        self.__off__ = {"X": 0, "O": 0}  # Fichas retiradas del juego.
+        self.__reset_to_standard__()
+
+    def __reset_to_standard__(self):
+        """
+        Coloca las fichas en la configuración inicial estándar de Backgammon.
+
+        Args:
+            None
+        Returns:
+            None
+        """
+        # Limpiar el tablero.
+        for i in range(24):
+            self.__points__[i] = Point(None, 0)
+        # Disposición estándar del tablero.
+        layout = [
+            (0, 'X', 2),  # Punto 1 (index 0): 2 de X.
+            (11, 'X', 5),
+            (16, 'X', 3),
+            (18, 'X', 5),
+            (23, 'O', 2),
+            (12, 'O', 5),
+            (7, 'O', 3),
+            (5, 'O', 5),
+        ]
+        # Colocar según el layout.
+        for idx, owner, cnt in layout:
+            self.__points__[idx].__owner__ = owner
+            self.__points__[idx].__count__ = cnt
+
+    def __is_point_owned_by__(self, index: int, player: str) -> bool:
+        """
+        Devuelve True si el punto pertenece al jugador indicado y posee fichas.
+
+        Args:
+            index (int): Índice del punto (0 a 23).
+            player (str): Jugador ('X' o 'O').
+        Returns:
+            bool: True si el punto pertenece al jugador y tiene fichas, False en caso contrario.
+        """
+        p = self.__points__[index]
+        return p.__owner__ == player and p.__count__ > 0
+
+    def __can_bear_off__(self, player: str) -> bool:
+        """
+        Verifica si el jugador puede retirar fichas (todas en el cuarto final).
+
+        Args:
+            player (str): Jugador ('X' o 'O').
+        Returns:
+            bool: True si todas las fichas están en el cuarto final y no hay fichas en la barra, False en caso contrario.
+        """
+        home_board = range(18, 24) if player == 'X' else range(0, 6)
+        for i in range(24):
+            if i not in home_board and self.__is_point_owned_by__(i, player):
+                return False
+        return self.__bar__[player] == 0  # No debe haber fichas en la barra.
+
+    def get_point(self, index: int) -> Point:
+        """
+        Obtiene el estado de un punto en el tablero.
+
+        Args:
+            index (int): Índice del punto (0 a 23).
+        Returns:
+            Point: Objeto Point en el índice especificado.
+        Raises:
+            IndexError: Si el índice está fuera de rango.
+        """
+        if index < 0 or index >= 24:
+            raise IndexError("Índice de punto fuera de rango")
+        return self.__points__[index]
+    
+    def get_bar(self, player: str) -> int:
+        """
+        Obtiene el número de fichas en la barra para el jugador.
+
+        Args:
+            player (str): Jugador ('X' o 'O').
+        Returns:
+            int: Número de fichas en la barra.
+        """
+        return self.__bar__[player]
+    
+    def get_off(self, player: str) -> int:
+        """
+        Obtiene el número de fichas retiradas para el jugador.
+
+        Args:
+            player (str): Jugador ('X' o 'O').
+        Returns:
+            int: Número de fichas retiradas.
+        """
+        return self.__off__[player]
+
+    def __apply_move__(self, src: int, dst: int, player: str) -> bool:
+        """
+        Aplica un movimiento de src a dst para el jugador, incluyendo barra y retiro.
+
+        Args:
+            src (int): Índice del punto de origen (-1 para barra, 0 a 23 para puntos).
+            dst (int): Índice del punto de destino (-1 para retiro de O, 0 a 23 para puntos, 24 para retiro de X).
+            player (str): Jugador ('X' o 'O').
+
+        Returns:
+            bool: True si el movimiento fue exitoso, False si no es válido.
+
+        Reglas implementadas:
+        - Si hay fichas en la barra, no se permiten movimientos desde el tablero.
+        - Permite mover desde la barra (src = -1) al punto correcto según el jugador.
+        - Permite retirar fichas (dst = 24 para X, dst = -1 para O) si todas están en el cuarto final.
+        - No permite mover desde un punto vacío o de otro jugador.
+        - Bloquea mover a un punto con 2+ fichas del oponente.
+        - Si hay una ficha del oponente, la golpea (se envía a la barra).
+        - Valida la dirección del movimiento (X: hacia puntos mayores, O: hacia puntos menores).
+
+        Nota: La validación del valor del dado se maneja en dice.py.
+        """
+        # Validación de índices.
+        if src < -1 or src >= 24 or dst < -1 or dst > 24:
+            return False
+
+        # Prioridad de la barra: no permitir movimientos desde el tablero si hay fichas en la barra.
+        if self.__bar__[player] > 0 and src >= 0:
+            return False
+
+        # Validación de movimientos desde la barra.
+        if src == -1:
+            if self.__bar__[player] == 0:
+                return False  # No hay fichas en la barra.
+            dest_point = self.__points__[dst] if dst in range(24) else None
+            opponent = 'O' if player == 'X' else 'X'
+            if dest_point and dest_point.__owner__ == opponent and dest_point.__count__ >= 2:
+                return False  # Destino bloqueado.
+        else:
+            # Validar que el punto de origen pertenece al jugador.
+            if not self.__is_point_owned_by__(src, player):
+                return False
+            # Validar la dirección del movimiento (no aplica para retiro).
+            if dst < 24 and player == 'X' and dst <= src:
+                return False
+            if dst >= 0 and player == 'O' and dst >= src:
+                return False
+
+        # Validación del retiro de fichas.
+        if (player == 'X' and dst == 24) or (player == 'O' and dst == -1):
+            if not self.__can_bear_off__(player):
+                return False  # No todas las fichas están en el cuarto final.
+            # Retirar ficha.
+            if src == -1:
+                self.__bar__[player] -= 1
+            else:
+                try:
+                    self.__points__[src].__count__ -= 1
+                    if self.__points__[src].__count__ == 0:
+                        self.__points__[src].__owner__ = None
+                except ValueError:
+                    return False
+            self.__off__[player] += 1
+            return True
+
+        # Validación del destino (no bloqueado).
+        dest_point = self.__points__[dst]
+        opponent = 'O' if player == 'X' else 'X'
+        if dest_point.__owner__ == opponent and dest_point.__count__ >= 2:
+            return False
+
+        # Remover ficha del origen.
+        if src == -1:
+            self.__bar__[player] -= 1
+        else:
+            try:
+                self.__points__[src].__count__ -= 1
+                if self.__points__[src].__count__ == 0:
+                    self.__points__[src].__owner__ = None
+            except ValueError:
+                return False
+
+        # Resolver destino: golpe o movimiento normal.
+        if dest_point.__owner__ == opponent and dest_point.__count__ == 1:
+            # Golpear ficha y mandarla a la barra.
+            self.__bar__[opponent] += 1
+            self.__points__[dst].__owner__ = player
+            self.__points__[dst].__count__ = 1
+        else:
+            if dest_point.__count__ == 0:
+                self.__points__[dst].__owner__ = player
+                self.__points__[dst].__count__ = 1
+            else:
+                self.__points__[dst].__count__ += 1
+
+        return True
+
+## Fin de la clase «Board».
+
+### Fin del código.
+```
+
+### ChatGPT:
+Perfecto, Enzo. Te recomiendo una batería de **tests unitarios** con `pytest` que cubran las rutas principales de ejecución y casos borde de tu código.
+Voy a proponerte **tests independientes** en un archivo `test_board.py`, apuntando a las funcionalidades críticas de `Point` y `Board`.
+
+**Recomendación de tests unitarios**
+```
+### Inicio del código de test (test_board.py)
+
+import pytest
+from board import Point, Board  # asumimos que el código está en board.py
+
+
+## ======================
+## TESTS PARA Point
+## ======================
+
+def test_point_repr_empty():
+    p = Point(None, 0)
+    assert repr(p) == " . "
+
+def test_point_repr_with_owner_and_count():
+    p = Point("X", 2)
+    assert repr(p) == "X2"
+
+def test_point_count_setter_and_getter():
+    p = Point("O", 1)
+    assert p.__count__ == 1
+    p.__count__ = 3
+    assert p.__count__ == 3
+
+def test_point_negative_count_raises():
+    p = Point("X", 0)
+    with pytest.raises(ValueError):
+        p.__count__ = -1
+
+
+## ======================
+## TESTS PARA Board
+## ======================
+
+def test_board_initial_setup_correct():
+    b = Board()
+    # Revisar algunos puntos del layout inicial
+    assert b.get_point(0).__owner__ == "X"
+    assert b.get_point(0).__count__ == 2
+    assert b.get_point(11).__owner__ == "X"
+    assert b.get_point(11).__count__ == 5
+    assert b.get_point(5).__owner__ == "O"
+    assert b.get_point(5).__count__ == 5
+
+def test_get_point_out_of_range_raises():
+    b = Board()
+    with pytest.raises(IndexError):
+        b.get_point(24)
+
+def test_is_point_owned_by_true_and_false():
+    b = Board()
+    assert b._Board__is_point_owned_by__(0, "X")
+    assert not b._Board__is_point_owned_by__(0, "O")
+    assert not b._Board__is_point_owned_by__(3, "X")  # punto vacío
+
+def test_can_bear_off_false_initial():
+    b = Board()
+    assert not b._Board__can_bear_off__("X")
+
+def test_apply_move_invalid_indices_returns_false():
+    b = Board()
+    assert not b._Board__apply_move__(-2, 5, "X")
+    assert not b._Board__apply_move__(0, 25, "X")
+
+def test_apply_move_from_empty_point_fails():
+    b = Board()
+    assert not b._Board__apply_move__(3, 4, "X")  # punto vacío
+
+def test_apply_move_wrong_direction_for_x():
+    b = Board()
+    src = 0  # X en 0
+    dst = 0  # mismo punto o menor
+    assert not b._Board__apply_move__(src, dst, "X")
+
+def test_apply_move_successful():
+    b = Board()
+    src = 0  # X en 0
+    dst = 1  # mover hacia adelante
+    initial_count_src = b.get_point(src).__count__
+    result = b._Board__apply_move__(src, dst, "X")
+    assert result
+    assert b.get_point(dst).__owner__ == "X"
+    assert b.get_point(dst).__count__ >= 1
+    assert b.get_point(src).__count__ == initial_count_src - 1
+
+def test_apply_move_hits_opponent_sends_to_bar():
+    b = Board()
+    # Forzar escenario: punto destino con 1 ficha de O
+    b.get_point(1).__owner__ = "O"
+    b.get_point(1).__count__ = 1
+    b.get_point(0).__owner__ = "X"
+    b.get_point(0).__count__ = 1
+    bar_initial = b.get_bar("O")
+    result = b._Board__apply_move__(0, 1, "X")
+    assert result
+    assert b.get_point(1).__owner__ == "X"  # ahora lo posee X
+    assert b.get_bar("O") == bar_initial + 1
+
+def test_apply_move_blocked_point_fails():
+    b = Board()
+    # Forzar destino con 2 fichas de O
+    b.get_point(1).__owner__ = "O"
+    b.get_point(1).__count__ = 2
+    b.get_point(0).__owner__ = "X"
+    b.get_point(0).__count__ = 1
+    assert not b._Board__apply_move__(0, 1, "X")
+
+def test_apply_move_from_bar_to_blocked_point_fails():
+    b = Board()
+    b._Board__bar__["X"] = 1
+    b.get_point(0).__owner__ = "O"
+    b.get_point(0).__count__ = 2
+    assert not b._Board__apply_move__(-1, 0, "X")
+
+def test_apply_move_bear_off_success():
+    b = Board()
+    # Forzar escenario de bear-off (todas fichas en home)
+    for i in range(24):
+        b.get_point(i).__owner__ = None
+        b.get_point(i).__count__ = 0
+    for i in range(18, 24):
+        b.get_point(i).__owner__ = "X"
+        b.get_point(i).__count__ = 1
+    src = 18
+    dst = 24  # retiro
+    result = b._Board__apply_move__(src, dst, "X")
+    assert result
+    assert b.get_off("X") == 1
+    assert b.get_point(src).__count__ == 0
+
+### Fin del código de test.
+```
+Cobertura que estos tests aportan
+
+✅ Point
+- `__repr__` para vacío y con dueño.
+- `__count__` getter/setter.
+- Validación de valores negativos.
+
+✅ Board
+- Configuración inicial correcta.
+- Validación de índices fuera de rango.
+- Métodos internos (`__is_point_owned_by__`, `__can_bear_off__`).
+- Distintos flujos de `__apply_move__`:
+- Índices inválidos.
+- Punto vacío.
+- Movimiento en dirección incorrecta.
+- Movimiento válido.
+- Golpear ficha (y enviar a la barra).
+- Destino bloqueado.
+- Movimiento desde barra.
+- Retiro de ficha (bear-off).
+
+¿Querés que te agregue **fixtures** de `pytest` para evitar repetir la inicialización de `Board` en cada test? Eso podría hacer los tests más limpios y fáciles de mantener.
