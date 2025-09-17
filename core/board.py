@@ -8,8 +8,6 @@ Ruta: "computacion-2025-backgammon-EnzoAguirre04/core/board.py".
 
 ### Inicio del código.
 
-## Inicio.
-
 ## Inicio de imports.
 
 from dataclasses import dataclass
@@ -158,6 +156,43 @@ class Board:
                 return False
         return self.__bar__[player] == 0  # No debe haber fichas en la barra.
 
+    def get_point(self, index: int) -> Point:
+        """
+        Obtiene el estado de un punto en el tablero.
+
+        Args:
+            index (int): Índice del punto (0 a 23).
+        Returns:
+            Point: Objeto Point en el índice especificado.
+        Raises:
+            IndexError: Si el índice está fuera de rango.
+        """
+        if index < 0 or index >= 24:
+            raise IndexError("Índice de punto fuera de rango")
+        return self.__points__[index]
+    
+    def get_bar(self, player: str) -> int:
+        """
+        Obtiene el número de fichas en la barra para el jugador.
+
+        Args:
+            player (str): Jugador ('X' o 'O').
+        Returns:
+            int: Número de fichas en la barra.
+        """
+        return self.__bar__[player]
+    
+    def get_off(self, player: str) -> int:
+        """
+        Obtiene el número de fichas retiradas para el jugador.
+
+        Args:
+            player (str): Jugador ('X' o 'O').
+        Returns:
+            int: Número de fichas retiradas.
+        """
+        return self.__off__[player]
+
     def __apply_move__(self, src: int, dst: int, player: str) -> bool:
         """
         Aplica un movimiento de src a dst para el jugador, incluyendo barra y retiro.
@@ -252,7 +287,5 @@ class Board:
         return True
 
 ## Fin de la clase «Board».
-
-## Fin.
 
 ### Fin del código.
