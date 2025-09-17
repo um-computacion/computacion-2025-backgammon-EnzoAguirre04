@@ -22,6 +22,9 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 
 ### Añadido:
 - Añadido el enlace del [CHANGELOG.md] en este mismo archivo.
+- En **[board.py]**:
+    -Añadidos `get_point`, `get_bar`, `get_point` en la clase `Board`.
+    -Añadida validación para la prioridad de la barra en `__apply_move__` dentro de la clase `Board`.
 
 ### Arreglado:
 - Enlances de [board.py] y [CONSIGNA.md] arreglados.
