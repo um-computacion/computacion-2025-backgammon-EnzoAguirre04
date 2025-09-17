@@ -206,6 +206,7 @@ class Board:
             bool: True si el movimiento fue exitoso, False si no es válido.
 
         Reglas implementadas:
+        - Si hay fichas en la barra, no se permiten movimientos desde el tablero.
         - Permite mover desde la barra (src = -1) al punto correcto según el jugador.
         - Permite retirar fichas (dst = 24 para X, dst = -1 para O) si todas están en el cuarto final.
         - No permite mover desde un punto vacío o de otro jugador.
@@ -217,6 +218,10 @@ class Board:
         """
         # Validación de índices.
         if src < -1 or src >= 24 or dst < -1 or dst > 24:
+            return False
+
+        # Prioridad de la barra: no permitir movimientos desde el tablero si hay fichas en la barra.
+        if self.__bar__[player] > 0 and src >= 0:
             return False
 
         # Validación de movimientos desde la barra.
