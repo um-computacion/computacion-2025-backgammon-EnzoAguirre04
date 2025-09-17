@@ -21,10 +21,36 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 ## [Unreleased] - Segundo Sprint
 
 ### Añadido:
+
 - Añadido el enlace del [CHANGELOG.md] en este mismo archivo.
 - En **[board.py]**:
-    -Añadidos `get_point`, `get_bar`, `get_point` en la clase `Board`.
-    -Añadida validación para la prioridad de la barra en `__apply_move__` dentro de la clase `Board`.
+    - Añadidos `get_point`, `get_bar`, `get_point` en la clase `Board`.
+    - Añadida validación para la prioridad de la barra en `__apply_move__` dentro de la clase `Board`.
+- Creación de **[test_board.py]** para realizar tests unitarios a **[board.py]**:
+- Añadida la clase `TestPoint` en **[test_board.py]** con los siguientes tests para hacer a `Point`:
+    - `test_initialization_valid`.
+    - `test_initialization_negative_count`.
+    - `test_count_setter_valid`.
+    - `test_count_setter_negative`.
+    - `test_repr_empty`.
+    - `test_repr_non_empty`.
+- Añadida la clase `TestBoard` en **[test_board.py]** con los siguientes tests para hacer a `Board`:
+    - `setUp`.
+    - `test_reset_to_standard`.
+    - `test_is_point_owned_by`.
+    - `test_can_bear_off_true`.
+    - `test_can_bear_off_false_bar`.
+    - `test_can_bear_off_false_outside_home`.
+    - `test_apply_move_valid`.
+    - `test_apply_move_from_bar`.
+    - `test_apply_move_bear_off`.
+    - `test_apply_move_bar_priority`.
+    - `test_apply_move_invalid_indices`.
+    - `test_apply_move_wrong_owner`.
+    - `test_apply_move_invalid_direction`.
+    - `test_apply_move_blocked_destination`.
+    - `test_apply_move_hit_opponent`.
+    - `test_get_point_invalid_index`.
 
 ### Arreglado:
 - Enlances de [board.py] y [CONSIGNA.md] arreglados.
@@ -47,6 +73,7 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 - README.md simple con estructura básica del proyecto.
 - Consigna del proyecto en formato Markdown.
 
+[test_board.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/tests/test_board.py
 [board.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/core/board.py
 [CONSIGNA.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/docs/CONSIGNA.md
 [CHANGELOG.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/docs/CHANGELOG.md
