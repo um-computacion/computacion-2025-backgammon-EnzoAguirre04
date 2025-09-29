@@ -6,6 +6,8 @@ Carrera: Ingeniería en Informática.
 Ruta: "computacion-2025-backgammon-EnzoAguirre04/tests/test_board.py".
 """
 
+#### Los test dan errores, arreglarlos después.
+
 ### Inicio del código.
 
 ## Inicio de imports.
