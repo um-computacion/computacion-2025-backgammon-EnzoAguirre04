@@ -8,8 +8,6 @@ Ruta: "computacion-2025-backgammon-EnzoAguirre04/core/board.py".
 
 ### Inicio del código.
 
-## Inicio.
-
 ## Inicio de imports.
 
 from dataclasses import dataclass
@@ -158,6 +156,43 @@ class Board:
                 return False
         return self.__bar__[player] == 0  # No debe haber fichas en la barra.
 
+    def get_point(self, index: int) -> Point:
+        """
+        Obtiene el estado de un punto en el tablero.
+
+        Args:
+            index (int): Índice del punto (0 a 23).
+        Returns:
+            Point: Objeto Point en el índice especificado.
+        Raises:
+            IndexError: Si el índice está fuera de rango.
+        """
+        if index < 0 or index >= 24:
+            raise IndexError("Índice de punto fuera de rango")
+        return self.__points__[index]
+    
+    def get_bar(self, player: str) -> int:
+        """
+        Obtiene el número de fichas en la barra para el jugador.
+
+        Args:
+            player (str): Jugador ('X' o 'O').
+        Returns:
+            int: Número de fichas en la barra.
+        """
+        return self.__bar__[player]
+    
+    def get_off(self, player: str) -> int:
+        """
+        Obtiene el número de fichas retiradas para el jugador.
+
+        Args:
+            player (str): Jugador ('X' o 'O').
+        Returns:
+            int: Número de fichas retiradas.
+        """
+        return self.__off__[player]
+
     def __apply_move__(self, src: int, dst: int, player: str) -> bool:
         """
         Aplica un movimiento de src a dst para el jugador, incluyendo barra y retiro.
@@ -171,6 +206,7 @@ class Board:
             bool: True si el movimiento fue exitoso, False si no es válido.
 
         Reglas implementadas:
+        - Si hay fichas en la barra, no se permiten movimientos desde el tablero.
         - Permite mover desde la barra (src = -1) al punto correcto según el jugador.
         - Permite retirar fichas (dst = 24 para X, dst = -1 para O) si todas están en el cuarto final.
         - No permite mover desde un punto vacío o de otro jugador.
@@ -182,6 +218,10 @@ class Board:
         """
         # Validación de índices.
         if src < -1 or src >= 24 or dst < -1 or dst > 24:
+            return False
+
+        # Prioridad de la barra: no permitir movimientos desde el tablero si hay fichas en la barra.
+        if self.__bar__[player] > 0 and src >= 0:
             return False
 
         # Validación de movimientos desde la barra.
@@ -252,7 +292,5 @@ class Board:
         return True
 
 ## Fin de la clase «Board».
-
-## Fin.
 
 ### Fin del código.
