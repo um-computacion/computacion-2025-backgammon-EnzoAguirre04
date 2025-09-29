@@ -18,9 +18,17 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 - **`Y (minor)`** representa nuevas funcionalidades agregadas dentro de la misma etapa.
 - **`Z (patch)`** representa correcciones de errores o mejoras menores.
 
+## Fechas de Sprints:
+
+- **Primer Sprint:** Del 2025-08-19 al 2025-09-03.
+- **Segundo Sprint:** Del 2025-09-04 al 2025-09-17.
+- **Tercer Sprint:** Del 2025-09-18 al 2025-10-01.
+
 ## [Unreleased] - Tercer Sprint
 
-### Sin cambios por ahora...
+### Añadido:
+
+- Fechas de los Sprints en este [CHANGELOG.md].
 
 ## [0.2.1] - 2025-09-28 - Segundo y Tercer Sprint
 
