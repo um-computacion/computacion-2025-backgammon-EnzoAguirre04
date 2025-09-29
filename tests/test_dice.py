@@ -33,20 +33,20 @@ class TestDice(unittest.TestCase):
     def test_roll_normal(self, mock_randint):
         """Prueba el lanzamiento de dados no dobles."""
         mock_randint.side_effect = [3, 5]
-        self.dice.roll()
-        self.assertEqual(self.dice.get_available_dice(), [3, 5])
+        self.dice.__roll__()
+        self.assertEqual(self.dice.__get_available_dice__(), [3, 5])
 
     @patch('random.randint')
     def test_roll_doubles(self, mock_randint):
         """Prueba el lanzamiento de dados dobles."""
         mock_randint.side_effect = [4, 4]
-        self.dice.roll()
-        self.assertEqual(self.dice.get_available_dice(), [4, 4, 4, 4])
+        self.dice.__roll__()
+        self.assertEqual(self.dice.__get_available_dice__(), [4, 4, 4, 4])
 
     def test_can_move_normal(self):
         """Prueba un movimiento válido según los dados."""
         self.dice.__dice__ = [3, 5]
-        result = self.dice.can_move(0, 3, 'X', self.board)
+        result = self.dice.__can_move__(0, 3, 'X', self.board)
         self.assertTrue(result)
         self.assertEqual(self.board.get_point(0).__count__, 1)
         self.assertEqual(self.board.get_point(3).__owner__, 'X')
@@ -57,7 +57,7 @@ class TestDice(unittest.TestCase):
         self.dice.__dice__ = [3]
         self.board.__apply_move__(23, 0, 'O')  # O golpea una ficha de X.
         self.assertEqual(self.board.get_bar('X'), 1)
-        result = self.dice.can_move(-1, 2, 'X', self.board)
+        result = self.dice.__can_move__(-1, 2, 'X', self.board)
         self.assertTrue(result)
         self.assertEqual(self.board.get_bar('X'), 0)
         self.assertEqual(self.board.get_point(2).__owner__, 'X')
@@ -70,7 +70,7 @@ class TestDice(unittest.TestCase):
             self.board.__points__[i] = Point(None, 0)
         self.board.__points__[20] = Point('X', 15)
         self.board.__bar__['X'] = 0
-        result = self.dice.can_move(20, 24, 'X', self.board)
+        result = self.dice.__can_move__(20, 24, 'X', self.board)
         self.assertTrue(result)
         self.assertEqual(self.board.get_off('X'), 1)
         self.assertEqual(self.board.get_point(20).__count__, 14)
@@ -82,7 +82,7 @@ class TestDice(unittest.TestCase):
             self.board.__points__[i] = Point(None, 0)
         self.board.__points__[20] = Point('X', 15)  # Punto 21.
         self.board.__bar__['X'] = 0
-        result = self.dice.can_move(20, 24, 'X', self.board)
+        result = self.dice.__can_move__(20, 24, 'X', self.board)
         self.assertTrue(result)
         self.assertEqual(self.board.get_off('X'), 1)
         self.assertEqual(self.board.get_point(20).__count__, 14)
@@ -90,19 +90,19 @@ class TestDice(unittest.TestCase):
     def test_use_die_normal(self):
         """Prueba el consumo de un dado en un movimiento normal."""
         self.dice.__dice__ = [3, 5]
-        self.dice.can_move(0, 3, 'X', self.board)
+        self.dice.__can_move__(0, 3, 'X', self.board)
         result = self.dice.use_die(0, 3, 'X')
         self.assertTrue(result)
-        self.assertEqual(self.dice.get_available_dice(), [5])
+        self.assertEqual(self.dice.__get_available_dice__(), [5])
 
     def test_use_die_from_bar(self):
         """Prueba el consumo de un dado en un movimiento desde la barra."""
         self.dice.__dice__ = [3]
         self.board.__apply_move__(23, 0, 'O')  # O golpea una ficha de X.
-        self.dice.can_move(-1, 2, 'X', self.board)
+        self.dice.__can_move__(-1, 2, 'X', self.board)
         result = self.dice.use_die(-1, 2, 'X')
         self.assertTrue(result)
-        self.assertEqual(self.dice.get_available_dice(), [])
+        self.assertEqual(self.dice.__get_available_dice__(), [])
 
     def test_use_die_bear_off(self):
         """Prueba el consumo de un dado en un retiro."""
@@ -111,10 +111,10 @@ class TestDice(unittest.TestCase):
             self.board.__points__[i] = Point(None, 0)
         self.board.__points__[20] = Point('X', 15)
         self.board.__bar__['X'] = 0
-        self.dice.can_move(20, 24, 'X', self.board)
+        self.dice.__can_move__(20, 24, 'X', self.board)
         result = self.dice.use_die(20, 24, 'X')
         self.assertTrue(result)
-        self.assertEqual(self.dice.get_available_dice(), [])
+        self.assertEqual(self.dice.__get_available_dice__(), [])
 
 ## Fin de la clase «TestDice».
 

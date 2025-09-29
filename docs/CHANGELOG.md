@@ -29,6 +29,19 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 ### Añadido:
 
 - Fechas de los Sprints en este [CHANGELOG.md].
+- **Implementación inicial de la clase `Dice` en [dice.py]**:
+    - Representa los dados en Backgammon, manejando dos dados de 6 caras.
+    - Añadido `__init__` para inicializar una lista vacía de valores de dados.
+    - Añadido `__roll__` para simular el lanzamiento de dos dados, asignando cuatro movimientos en caso de dobles.
+    - Añadido `__get_available_dice__` para devolver una copia de los valores de dados disponibles.
+    - Añadido `__can_move__` para validar movimientos (normales, desde la barra, retiro) basados en los valores de los dados, integrándose con `board.__apply_move__`.
+    - Añadido `__use_die__` para consumir un dado usado, soportando retiro flexible.
+- **Documentación completa**:
+    - Añadidos Docstrings para la clase `Dice` y todos sus métodos, detallando propósito, argumentos, valores de retorno y excepciones.
+- **Pruebas unitarias**:
+    - Añadido **[test_dice.py]** con pruebas unitarias completas para la clase `Dice` usando `unittest`.
+    - Las pruebas cubren lanzamiento de dados (normales y dobles), validación de movimientos (normales, desde la barra, retiro exacto y flexible), y consumo de dados.
+    - Uso de `unittest.mock.patch` para controlar los valores de los dados en las pruebas.
 
 ## [0.2.1] - 2025-09-28 - Segundo y Tercer Sprint
 
@@ -85,7 +98,9 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 - README.md simple con estructura básica del proyecto.
 - Consigna del proyecto en formato Markdown.
 
+[test_dice.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/tests/test_dice.py
 [test_board.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/tests/test_board.py
+[dice.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/core/dice.py
 [board.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/core/board.py
 [CONSIGNA.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/docs/CONSIGNA.md
 [CHANGELOG.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/docs/CHANGELOG.md

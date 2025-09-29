@@ -37,7 +37,7 @@ class Dice:
         """
         self.__dice__: List[int] = []  # Valores de los dados disponibles.
 
-    def roll(self) -> None:
+    def __roll__(self) -> None:
         """
         Lanza dos dados de 6 caras, asignando valores disponibles.
         Si los dados son iguales (dobles), se asignan cuatro movimientos.
@@ -52,7 +52,7 @@ class Dice:
         if die1 == die2:
             self.__dice__ = [die1] * 4  # Dobles: Cuatro movimientos.
 
-    def get_available_dice(self) -> List[int]:
+    def __get_available_dice__(self) -> List[int]:
         """
         Obtiene los valores de los dados disponibles.
 
@@ -61,7 +61,7 @@ class Dice:
         """
         return self.__dice__.copy()
     
-    def can_move(self, src: int, dst: int, player: str, board: Board) -> bool:
+    def __can_move__(self, src: int, dst: int, player: str, board: Board) -> bool:
         """
         Verifica si un movimiento es válido según los valores de los dados disponibles.
 
