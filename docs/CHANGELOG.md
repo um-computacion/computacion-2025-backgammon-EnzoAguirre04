@@ -18,7 +18,11 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 - **`Y (minor)`** representa nuevas funcionalidades agregadas dentro de la misma etapa.
 - **`Z (patch)`** representa correcciones de errores o mejoras menores.
 
-## [Unreleased] - Segundo Sprint
+## [Unreleased] - Tercer Sprint
+
+### Sin cambios por ahora...
+
+## [0.2.1] - 2025-09-03 - Segundo y Tercer Sprint
 
 ### Añadido:
 
@@ -78,6 +82,7 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 [CONSIGNA.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/docs/CONSIGNA.md
 [CHANGELOG.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/docs/CHANGELOG.md
 
-[Unreleased]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/releases/tag/v0.1.0
