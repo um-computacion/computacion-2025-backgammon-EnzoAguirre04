@@ -113,6 +113,48 @@ class Dice:
         if distance in self.__dice__:
             return board.__apply_move__(src, dst, player)
         return False
+    
+    def use_die(self, src: int, dst: int, player: str) -> bool:
+        """
+        Consume un dado usado en un movimiento válido.
+
+        Args:
+            src (int): Índice del punto de origen.
+            dst (int): Índice del punto de destino.
+            player (str): Jugador ('X' o 'O').
+        Returns:
+            bool: True si el dado fue consumido, False si no es válido.
+        """
+        if not self.__dice__:
+            return False
+
+        # Movimiento desde la barra.
+        if src == -1:
+            expected_dst = self.__dice__[0] - 1 if player == 'X' else 24 - self.__dice__[0]
+            if dst == expected_dst:
+                self.__dice__.pop(0)
+                return True
+            return False
+
+        # Retiro de fichas.
+        if (player == 'X' and dst == 24) or (player == 'O' and dst == -1):
+            exact_die = 24 - src if player == 'X' else src + 1
+            if exact_die in self.__dice__:
+                self.__dice__.remove(exact_die)
+                return True
+            # Retiro flexible: Usa el dado más grande disponible.
+            max_die = max(self.__dice__)
+            if max_die > exact_die:
+                self.__dice__.remove(max_die)
+                return True
+            return False
+
+        # Movimiento normal.
+        distance = abs(dst - src)
+        if distance in self.__dice__:
+            self.__dice__.remove(distance)
+            return True
+        return False
 
 ## Fin de la clase «Dice».
 
