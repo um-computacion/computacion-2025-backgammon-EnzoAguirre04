@@ -24,7 +24,11 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 - **Segundo Sprint:** Del 2025-09-04 al 2025-09-17.
 - **Tercer Sprint:** Del 2025-09-18 al 2025-10-01.
 
-## [Unreleased] - Tercer Sprint
+## [Unreleased] - Cuarto Sprint
+
+- Sin cambios por ahora...
+
+## [0.3.0] - 2025-10-01 - Tercer Sprint
 
 ### Añadido:
 
@@ -105,7 +109,8 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 [CONSIGNA.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/docs/CONSIGNA.md
 [CHANGELOG.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/docs/CHANGELOG.md
 
-[Unreleased]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/releases/tag/v0.1.0
