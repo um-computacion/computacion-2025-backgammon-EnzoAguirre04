@@ -156,7 +156,7 @@ class Board:
                 return False
         return self.__bar__[player] == 0  # No debe haber fichas en la barra.
 
-    def get_point(self, index: int) -> Point:
+    def __get_point__(self, index: int) -> Point:
         """
         Obtiene el estado de un punto en el tablero.
 
@@ -171,7 +171,7 @@ class Board:
             raise IndexError("Índice de punto fuera de rango")
         return self.__points__[index]
     
-    def get_bar(self, player: str) -> int:
+    def __get_bar__(self, player: str) -> int:
         """
         Obtiene el número de fichas en la barra para el jugador.
 
