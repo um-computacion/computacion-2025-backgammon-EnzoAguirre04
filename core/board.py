@@ -182,7 +182,7 @@ class Board:
         """
         return self.__bar__[player]
     
-    def get_off(self, player: str) -> int:
+    def __get_off__(self, player: str) -> int:
         """
         Obtiene el número de fichas retiradas para el jugador.
 

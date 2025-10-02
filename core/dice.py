@@ -114,7 +114,7 @@ class Dice:
             return board.__apply_move__(src, dst, player)
         return False
     
-    def use_die(self, src: int, dst: int, player: str) -> bool:
+    def __use_die__(self, src: int, dst: int, player: str) -> bool:
         """
         Consume un dado usado en un movimiento válido.
 
