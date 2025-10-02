@@ -5,6 +5,7 @@ Ciclo Lectivo: 2025.
 Carrera: Ingeniería en Informática.
 Ruta: "computacion-2025-backgammon-EnzoAguirre04/tests/test_dice.py".
 """
+#### Los test dan errores, arreglarlos después.
 
 ### Inicio del código.
 
