@@ -38,10 +38,10 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
         - `__id__`: Identificador del jugador (X o O).
         - `__name__`: Nombre opcional (por defecto, igual al identificador).
     - Métodos:
-        - id y name: Propiedades para acceder al identificador y nombre.
-        - can_bear_off: Delega a `Board.__can_bear_off__` para verificar si el jugador puede retirar fichas.
-        - has_won: Comprueba si el jugador ha retirado todas sus fichas (get_off(player) == 15).
-        - try_move: Valida un movimiento con Dice.can_move y, si es válido, consume el dado con Dice.use_die.
+        - `id y name`: Propiedades para acceder al identificador y nombre.
+        - `can_bear_off`: Delega a `Board.__can_bear_off__` para verificar si el jugador puede retirar fichas.
+        - `has_won`: Comprueba si el jugador ha retirado todas sus fichas (get_off(player) == 15).
+        - `try_move`: Valida un movimiento con Dice.can_move y, si es válido, consume el dado con Dice.use_die.
     - Integración:
         - Usa métodos públicos de `Board` (`get_point`, `get_bar`, `get_off`, `__apply_move__`) y `Dice` (`can_move`, `use_die`).
 
@@ -53,7 +53,6 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
         - `test_has_won_true/false`: Verifica la condición de victoria.
         - `test_try_move_valid`: Prueba un movimiento válido, incluyendo consumo de dado.
         - `test_try_move_invalid`: Prueba un movimiento inválido (punto no pertenece al jugador).
-
 
 ## [0.3.0] - 2025-10-01 - Tercer Sprint
 
