@@ -29,7 +29,7 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 
 ### Sin Cambios.
 
-## [0.4.0] - Cuarto Sprint
+## [0.4.0] - 2025-10-12 - Cuarto Sprint
 
 ### Añadido:
 
