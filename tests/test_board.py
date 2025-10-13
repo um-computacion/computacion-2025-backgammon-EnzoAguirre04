@@ -73,20 +73,20 @@ class TestBoard(unittest.TestCase):
             (23, 'O', 2), (12, 'O', 5), (7, 'O', 3), (5, 'O', 5)
         ]
         for idx, owner, count in expected_layout:
-            point = self.board.get_point(idx)
+            point = self.board.__get_point__(idx)
             self.assertEqual(point.__owner__, owner)
             self.assertEqual(point.__count__, count)
         # Verificar que otros puntos estén vacíos.
         for i in range(24):
             if i not in [0, 5, 7, 11, 12, 16, 18, 23]:
-                point = self.board.get_point(i)
+                point = self.board.__get_point__(i)
                 self.assertEqual(point.__owner__, None)
                 self.assertEqual(point.__count__, 0)
         # Verificar barra y retiradas.
-        self.assertEqual(self.board.get_bar('X'), 0)
-        self.assertEqual(self.board.get_bar('O'), 0)
-        self.assertEqual(self.board.get_off('X'), 0)
-        self.assertEqual(self.board.get_off('O'), 0)
+        self.assertEqual(self.board.__get_bar__('X'), 0)
+        self.assertEqual(self.board.__get_bar__('O'), 0)
+        self.assertEqual(self.board.__get_off__('X'), 0)
+        self.assertEqual(self.board.__get_off__('O'), 0)
 
     def test_is_point_owned_by(self):
         """Prueba la verificación de propiedad de puntos."""
@@ -110,7 +110,7 @@ class TestBoard(unittest.TestCase):
         """Prueba __can_bear_off__ con fichas en la barra."""
         # Mover una ficha de O a la barra.
         self.board.__apply_move__(0, 5, 'X')  # X golpea una ficha de O en 5.
-        self.assertEqual(self.board.get_bar('O'), 1)
+        self.assertEqual(self.board.__get_bar__('O'), 1)
         self.assertFalse(self.board.__can_bear_off__('O'))
 
     def test_can_bear_off_false_outside_home(self):
@@ -122,20 +122,20 @@ class TestBoard(unittest.TestCase):
         """Prueba un movimiento válido entre puntos."""
         result = self.board.__apply_move__(0, 3, 'X')
         self.assertTrue(result)
-        self.assertEqual(self.board.get_point(0).__count__, 1)
-        self.assertEqual(self.board.get_point(3).__owner__, 'X')
-        self.assertEqual(self.board.get_point(3).__count__, 1)
+        self.assertEqual(self.board.__get_point__(0).__count__, 1)
+        self.assertEqual(self.board.__get_point__(3).__owner__, 'X')
+        self.assertEqual(self.board.__get_point__(3).__count__, 1)
 
     def test_apply_move_from_bar(self):
         """Prueba un movimiento válido desde la barra."""
         # Simular una ficha en la barra golpeando una ficha de O.
         self.board.__apply_move__(0, 5, 'X')  # X golpea una ficha de O en 5.
-        self.assertEqual(self.board.get_bar('O'), 1)
+        self.assertEqual(self.board.__get_bar__('O'), 1)
         result = self.board.__apply_move__(-1, 2, 'O')
         self.assertTrue(result)
-        self.assertEqual(self.board.get_bar('O'), 0)
-        self.assertEqual(self.board.get_point(2).__owner__, 'O')
-        self.assertEqual(self.board.get_point(2).__count__, 1)
+        self.assertEqual(self.board.__get_bar__('O'), 0)
+        self.assertEqual(self.board.__get_point__(2).__owner__, 'O')
+        self.assertEqual(self.board.__get_point__(2).__count__, 1)
 
     def test_apply_move_bear_off(self):
         """Prueba el retiro de fichas desde el cuarto final."""
@@ -150,14 +150,14 @@ class TestBoard(unittest.TestCase):
             self.board.__apply_move__(18, 20, 'X')
         result = self.board.__apply_move__(20, 24, 'X')
         self.assertTrue(result)
-        self.assertEqual(self.board.get_off('X'), 1)
-        self.assertEqual(self.board.get_point(20).__count__, 14)
+        self.assertEqual(self.board.__get_off__('X'), 1)
+        self.assertEqual(self.board.__get_point__(20).__count__, 14)
 
     def test_apply_move_bar_priority(self):
         """Prueba que no se permitan movimientos desde el tablero con fichas en la barra."""
         # Simular una ficha en la barra.
         self.board.__apply_move__(23, 0, 'O')  # O golpea una ficha de X.
-        self.assertEqual(self.board.get_bar('X'), 1)
+        self.assertEqual(self.board.__get_bar__('X'), 1)
         result = self.board.__apply_move__(11, 14, 'X')
         self.assertFalse(result)
 
@@ -184,14 +184,14 @@ class TestBoard(unittest.TestCase):
     def test_apply_move_hit_opponent(self):
         """Prueba golpear una ficha solitaria del oponente."""
         self.board.__apply_move__(11, 5, 'X')  # Mover una ficha de X a 5, golpeando a O.
-        self.assertEqual(self.board.get_bar('O'), 1)
-        self.assertEqual(self.board.get_point(5).__owner__, 'X')
-        self.assertEqual(self.board.get_point(5).__count__, 1)
+        self.assertEqual(self.board.__get_bar__('O'), 1)
+        self.assertEqual(self.board.__get_point__(5).__owner__, 'X')
+        self.assertEqual(self.board.__get_point__(5).__count__, 1)
 
     def test_get_point_invalid_index(self):
         """Prueba get_point con un índice inválido."""
         with self.assertRaises(IndexError):
-            self.board.get_point(24)
+            self.board.__get_point__(24)
 
 ## Fin de la clase «TestBoard».
 

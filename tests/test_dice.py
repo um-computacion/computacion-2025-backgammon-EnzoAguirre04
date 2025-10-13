@@ -5,10 +5,9 @@ Ciclo Lectivo: 2025.
 Carrera: Ingeniería en Informática.
 Ruta: "computacion-2025-backgammon-EnzoAguirre04/tests/test_dice.py".
 """
+#### Los test dan errores, arreglarlos después.
 
 ### Inicio del código.
-
-## Inicio.
 
 ## Inicio de imports.
 
@@ -48,20 +47,20 @@ class TestDice(unittest.TestCase):
         self.dice.__dice__ = [3, 5]
         result = self.dice.__can_move__(0, 3, 'X', self.board)
         self.assertTrue(result)
-        self.assertEqual(self.board.get_point(0).__count__, 1)
-        self.assertEqual(self.board.get_point(3).__owner__, 'X')
-        self.assertEqual(self.board.get_point(3).__count__, 1)
+        self.assertEqual(self.board.__get_point__(0).__count__, 1)
+        self.assertEqual(self.board.__get_point__(3).__owner__, 'X')
+        self.assertEqual(self.board.__get_point__(3).__count__, 1)
 
     def test_can_move_from_bar(self):
         """Prueba un movimiento válido desde la barra."""
         self.dice.__dice__ = [3]
         self.board.__apply_move__(23, 0, 'O')  # O golpea una ficha de X.
-        self.assertEqual(self.board.get_bar('X'), 1)
+        self.assertEqual(self.board.__get_bar__('X'), 1)
         result = self.dice.__can_move__(-1, 2, 'X', self.board)
         self.assertTrue(result)
-        self.assertEqual(self.board.get_bar('X'), 0)
-        self.assertEqual(self.board.get_point(2).__owner__, 'X')
-        self.assertEqual(self.board.get_point(2).__count__, 1)
+        self.assertEqual(self.board.__get_bar__('X'), 0)
+        self.assertEqual(self.board.__get_point__(2).__owner__, 'X')
+        self.assertEqual(self.board.__get_point__(2).__count__, 1)
 
     def test_can_move_bear_off(self):
         """Prueba el retiro de fichas con un dado exacto."""
@@ -72,8 +71,8 @@ class TestDice(unittest.TestCase):
         self.board.__bar__['X'] = 0
         result = self.dice.__can_move__(20, 24, 'X', self.board)
         self.assertTrue(result)
-        self.assertEqual(self.board.get_off('X'), 1)
-        self.assertEqual(self.board.get_point(20).__count__, 14)
+        self.assertEqual(self.board.__get_off__('X'), 1)
+        self.assertEqual(self.board.__get_point__(20).__count__, 14)
 
     def test_can_move_bear_off_flexible(self):
         """Prueba el retiro flexible desde un punto más alto."""
@@ -84,14 +83,14 @@ class TestDice(unittest.TestCase):
         self.board.__bar__['X'] = 0
         result = self.dice.__can_move__(20, 24, 'X', self.board)
         self.assertTrue(result)
-        self.assertEqual(self.board.get_off('X'), 1)
-        self.assertEqual(self.board.get_point(20).__count__, 14)
+        self.assertEqual(self.board.__get_off__('X'), 1)
+        self.assertEqual(self.board.__get_point__(20).__count__, 14)
 
     def test_use_die_normal(self):
         """Prueba el consumo de un dado en un movimiento normal."""
         self.dice.__dice__ = [3, 5]
         self.dice.__can_move__(0, 3, 'X', self.board)
-        result = self.dice.use_die(0, 3, 'X')
+        result = self.dice.__use_die__(0, 3, 'X')
         self.assertTrue(result)
         self.assertEqual(self.dice.__get_available_dice__(), [5])
 
@@ -100,7 +99,7 @@ class TestDice(unittest.TestCase):
         self.dice.__dice__ = [3]
         self.board.__apply_move__(23, 0, 'O')  # O golpea una ficha de X.
         self.dice.__can_move__(-1, 2, 'X', self.board)
-        result = self.dice.use_die(-1, 2, 'X')
+        result = self.dice.__use_die__(-1, 2, 'X')
         self.assertTrue(result)
         self.assertEqual(self.dice.__get_available_dice__(), [])
 
@@ -112,13 +111,11 @@ class TestDice(unittest.TestCase):
         self.board.__points__[20] = Point('X', 15)
         self.board.__bar__['X'] = 0
         self.dice.__can_move__(20, 24, 'X', self.board)
-        result = self.dice.use_die(20, 24, 'X')
+        result = self.dice.__use_die__(20, 24, 'X')
         self.assertTrue(result)
         self.assertEqual(self.dice.__get_available_dice__(), [])
 
 ## Fin de la clase «TestDice».
-
-## Fin.
 
 ### Fin del código.
 
