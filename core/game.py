@@ -41,7 +41,7 @@ class Game:
             'X': Player('X', player_x_name),
             'O': Player('O', player_o_name)
         }
-        self.__current_player__ = 'X'  # X comienza
+        self.__current_player__ = 'X'  # X comienza.
         self.__dice_rolled__ = False
 
     def get_board(self) -> Board:
