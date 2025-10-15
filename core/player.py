@@ -11,8 +11,8 @@ Ruta: "computacion-2025-backgammon-EnzoAguirre04/core/player.py".
 ## Inicio de imports.
 
 from typing import Optional
-from board import Board
-from dice import Dice
+from core.board import Board
+from core.dice import Dice
 
 ## Fin de imports.
 

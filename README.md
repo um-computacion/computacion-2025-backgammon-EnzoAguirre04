@@ -39,7 +39,11 @@ computacion-2025-backgammon-EnzoAguirre04
 │   └── __init__.py
 │
 ├── tests
-│   └── __init__.py
+│   ├── __init__.py
+│   ├── test_board.py
+│   ├── test_dice.py
+│   ├── test_game.py
+│   └── test_player.py
 │
 ├── .gitignore
 └── README.md

@@ -12,7 +12,7 @@ Ruta: "computacion-2025-backgammon-EnzoAguirre04/core/dice.py".
 
 import random
 from typing import List
-from board import Board
+from core.board import Board
 
 ## Fin de imports.
 
