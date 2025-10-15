@@ -10,8 +10,8 @@ Ruta: "computacion-2025-backgammon-EnzoAguirre04/core/game.py".
 
 ## Inicio de imports.
 
-from typing import Optional, Tuple
-from core.board import Board, Point
+from typing import Optional
+from core.board import Board
 from core.dice import Dice
 from core.player import Player
 
@@ -44,7 +44,7 @@ class Game:
         self.__current_player__ = 'X'  # X comienza.
         self.__dice_rolled__ = False
 
-    def get_board(self) -> Board:
+    def __get_board__(self) -> Board:
         """
         Obtiene la instancia del tablero.
 
@@ -53,7 +53,7 @@ class Game:
         """
         return self.__board__
 
-    def get_current_player(self) -> Player:
+    def __get_current_player__(self) -> Player:
         """
         Obtiene el jugador actual.
 
@@ -62,7 +62,7 @@ class Game:
         """
         return self.__players__[self.__current_player__]
 
-    def get_available_dice(self) -> list[int]:
+    def __get_available_dice__(self) -> list[int]:
         """
         Obtiene los valores de los dados disponibles.
 
@@ -71,7 +71,7 @@ class Game:
         """
         return self.__dice__.__get_available_dice__()
 
-    def roll_dice(self) -> None:
+    def __roll_dice__(self) -> None:
         """
         Lanza los dados para el turno del jugador actual.
         Solo permitido si los dados no han sido lanzados en este turno.
@@ -84,7 +84,7 @@ class Game:
         self.__dice__.__roll__()
         self.__dice_rolled__ = True
 
-    def try_move(self, src: int, dst: int) -> bool:
+    def __try_move__(self, src: int, dst: int) -> bool:
         """
         Intenta realizar un movimiento para el jugador actual.
 
@@ -101,10 +101,10 @@ class Game:
         player = self.__players__[self.__current_player__]
         result = player.__try_move__(src, dst, self.__board__, self.__dice__)
         if result and not self.__dice__.__get_available_dice__():
-            self.end_turn()
+            self.__end_turn__()
         return result
 
-    def end_turn(self) -> None:
+    def __end_turn__(self) -> None:
         """
         Finaliza el turno del jugador actual, alternando al siguiente jugador.
 
@@ -116,7 +116,7 @@ class Game:
         self.__current_player__ = 'O' if self.__current_player__ == 'X' else 'X'
         self.__dice_rolled__ = False
 
-    def get_winner(self) -> Optional[Player]:
+    def __get_winner__(self) -> Optional[Player]:
         """
         Verifica si hay un ganador (jugador que ha retirado todas sus fichas).
 
