@@ -27,7 +27,42 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 
 ## [Unreleased] - Cuarto Sprint
 
-### Sin Cambios.
+## [0.5.0] - 2025-10-14 - Cuarto Sprint
+
+### Añadido:
+
+- **Clase `Game` en [game.py]:**
+    - Atributos:
+        - `__board__`: Instancia de Board para el tablero.
+        - `__dice__`: Instancia de Dice para los dados.
+        - `__players__`: Diccionario con los jugadores (X y O).
+        - `__current_player__`: Identificador del jugador actual (X o O).
+        - `__dice_rolled__`: Bandera para rastrear si los dados fueron lanzados en el turno.
+    - Métodos:
+        - `__init__`: Inicializa el juego con dos jugadores, un tablero, y dados.
+        - `__get_board__`: Devuelve el tablero.
+        - `__get_current_player__`: Devuelve el jugador actual.
+        - `__get_available_dice__`: Devuelve los dados disponibles.
+        - `__roll_dice__`: Lanza los dados si no se han lanzado en el turno.
+        - `__try_move__`: Intenta un movimiento, validándolo con Player.try_move y finalizando el turno si no quedan dados.
+        - `__end_turn__`: Alterna el jugador y reinicia los dados.
+        - `__get_winner__`: Verifica si hay un ganador.
+    - Integración:
+        - Usa métodos públicos de `Board` (`get_point`, `get_bar`, `get_off`, `apply_move`), `Dice` (`roll`, `get_available_dice`, `can_move`, `use_die`), y `Player` (`try_move`, `has_won`). `try_move` finaliza el turno automáticamente si no quedan dados, lo que simplifica la lógica para el CLI.
+
+- **Pruebas en [test_game.py]**
+    - Cobertura:
+        - `test_initialization`: Verifica la creación del juego.
+        - `test_roll_dice`: Prueba el lanzamiento de dados.
+        - `test_roll_dice_already_rolled`: Asegura que no se pueda relanzar en el mismo turno.
+        - `test_try_move_without_rolling`: Verifica que mover sin lanzar dados lanza un error.
+        - `test_try_move_valid/invalid`: Prueba movimientos válidos e inválidos.
+        - `test_end_turn`: Verifica el cambio de turno y reinicio de dados.
+        - `test_get_winner/none`: Prueba la detección de ganador o su ausencia.
+
+### Modificado:
+
+- Añadido "core." a los imports dentro de los archivos de "core/".
 
 ## [0.4.0] - 2025-10-12 - Cuarto Sprint
 
@@ -128,16 +163,19 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 - README.md simple con estructura básica del proyecto.
 - Consigna del proyecto en formato Markdown.
 
+[test_game.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/tests/test_game.py
 [test_player.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/tests/test_player.py
 [test_dice.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/tests/test_dice.py
 [test_board.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/tests/test_board.py
+[game.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/core/game.py
 [player.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/core/player.py
 [dice.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/core/dice.py
 [board.py]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/core/board.py
 [CONSIGNA.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/docs/CONSIGNA.md
 [CHANGELOG.md]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/blob/main/docs/CHANGELOG.md
 
-[Unreleased]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/um-computacion/computacion-2025-backgammon-EnzoAguirre04/compare/v0.2.0...v0.2.1
