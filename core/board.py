@@ -87,28 +87,14 @@ class Board:
     """
 
     def __init__(self):
-        """
-        Inicializa un tablero vacío y lo coloca en la configuración estándar.
-
-        Args:
-            None
-        Returns:
-            None
-        """
+        """Inicializa un tablero vacío y lo coloca en la configuración estándar."""
         self.__points__: List[Point] = [Point(None, 0) for _ in range(24)]
         self.__bar__ = {"X": 0, "O": 0}  # Fichas en la barra.
         self.__off__ = {"X": 0, "O": 0}  # Fichas retiradas del juego.
         self.__reset_to_standard__()
 
     def __reset_to_standard__(self):
-        """
-        Coloca las fichas en la configuración inicial estándar de Backgammon.
-
-        Args:
-            None
-        Returns:
-            None
-        """
+        """Coloca las fichas en la configuración inicial estándar de Backgammon."""
         # Limpiar el tablero.
         for i in range(24):
             self.__points__[i] = Point(None, 0)
