@@ -34,6 +34,8 @@ class Point:
         __count__ (int): Cantidad de fichas en el punto (no negativa).
     """
 
+    ## Inicio de la propiedad «__count__».
+
     @property
     def __count__(self) -> int:
         """
@@ -58,6 +60,10 @@ class Point:
             raise ValueError("El número de fichas no puede ser negativo")
         self.__count_internal__ = value
 
+    ## Fin de la propiedad «__count__».
+
+    ## Inicio del método «__post_init__».
+
     def __post_init__(self):
         """
         Valida y establece el valor inicial de __count__.
@@ -66,6 +72,10 @@ class Point:
             ValueError: Si el valor inicial de __count_internal__ es negativo.
         """
         self.__count__ = self.__count_internal__
+
+    ## Fin del método «__post_init__».
+
+    ## Inicio del método «__repr__».
 
     def __repr__(self) -> str:
         """
@@ -77,6 +87,34 @@ class Point:
         if self.__owner__ is None or self.__count__ == 0:
             return " . "
         return f"{self.__owner__}{self.__count__}"
+
+    ## Fin del método «__repr__».
+
+    ## Inicio del método «__to_dict__».
+
+    def __to_dict__(self) -> dict:
+        """
+        Devuelve una representación serializable del punto.
+
+        Returns:
+            dict: Diccionario con las claves 'owner' y 'count'.
+        """
+        return {"owner": self.__owner__, "count": self.__count__}
+
+    ## Fin del método «__to_dict__».
+
+    ## Inicio del método «__is_empty__».
+
+    def __is_empty__(self) -> bool:
+        """
+        Verifica si el punto está vacío.
+
+        Returns:
+            bool: True si el punto no contiene fichas.
+        """
+        return self.__owner__ is None or self.__count__ == 0
+
+    ## Fin del método «__is_empty__».
 
 ### Fin de la clase «Point».
 
@@ -95,7 +133,7 @@ class Board:
         - Mantener la disposición del tablero y su estado general.
         - Validar y aplicar movimientos según las reglas del juego.
         - Gestionar fichas en la barra y retiradas.
-        - Cumplir con principios SOLID separando responsabilidades internas.
+        - Permitir exportar e importar el estado del tablero.
     """
 
     ## Inicio del método «__init__».
@@ -364,6 +402,40 @@ class Board:
         return self.__off__[player] >= 15
 
     ## Fin de método «__check_victory__».
+
+    ## Inicio del método «__get_state__».
+
+    def __get_state__(self) -> dict:
+        """
+        Devuelve una descripción completa del estado del tablero.
+
+        Returns:
+            dict: Estructura serializable con puntos, barra y fichas retiradas.
+        """
+        return {
+            "points": [p.__to_dict__() for p in self.__points__],
+            "bar": self.__bar__.copy(),
+            "off": self.__off__.copy(),
+        }
+
+    ## Fin del método «__get_state__».
+
+    ## Inicio del método «__set_state__».
+
+    def __set_state__(self, state: dict) -> None:
+        """
+        Restaura el estado del tablero desde un diccionario serializado.
+
+        Args:
+            state (dict): Estructura generada previamente por __get_state__().
+        """
+        for i, p_state in enumerate(state["points"]):
+            self.__points__[i].__owner__ = p_state["owner"]
+            self.__points__[i].__count__ = p_state["count"]
+        self.__bar__ = state["bar"].copy()
+        self.__off__ = state["off"].copy()
+
+    ## Fin del método «__set_state__».
 
     ## Inicio de método «__str__».
 
