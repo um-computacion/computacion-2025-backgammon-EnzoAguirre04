@@ -25,7 +25,21 @@ El proyecto utiliza un esquema adaptado de [SemVer](https://semver.org/) donde:
 - **Tercer Sprint:** Del 2025-09-18 al 2025-10-01.
 - **Cuarto Sprint:** Del 2025-10-01 al 2025-10-15.
 
-## [Unreleased] - Cuarto Sprint
+## [Unreleased] - Cuarto Sprint y Quinto Sprint
+
+### Añadido:
+- Se agregó el método `__check_victory__` para verificar si un jugador ganó (todas las fichas retiradas).
+- Se incorporó el método `__str__` en `Board` para facilitar la depuración y la integración con la interfaz de línea de comandos.
+- Se añadieron métodos internos (`__validate_move__`, `__perform_bear_off__`, `__perform_hit_or_move__`) para separar responsabilidades y mejorar la claridad del código.
+- Se incorporaron los métodos `__to_dict__` y `__is_empty__` en la clase `Point`, permitiendo serializar y verificar el estado de las casillas.
+- Se añadieron los métodos `__get_state__` y `__set_state__` en la clase `Board`, posibilitando exportar e importar el estado completo del tablero.
+- Se actualizó la documentación interna (docstrings) para mayor coherencia con la consigna de estilo.
+
+### Modificado:
+- El método `__apply_move__` fue refactorizado.
+- Se mejoró la documentación interna con docstrings detallados y consistentes en todas las funciones.
+- Se reforzaron las validaciones internas para asegurar la consistencia del estado del tablero durante serialización y restauración.
+
 
 ## [0.5.0] - 2025-10-14 - Cuarto Sprint
 
