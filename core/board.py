@@ -295,7 +295,7 @@ class Board:
         if dest_point.__owner__ == opponent and dest_point.__count__ >= 2:
             return False
 
-        # Quitar ficha del origen
+        # Quitar ficha del origen.
         if src == -1:
             self.__bar__[player] -= 1
         else:
@@ -306,7 +306,7 @@ class Board:
             except ValueError:
                 return False
 
-        # Resolver el destino
+        # Resolver el destino.
         if dest_point.__owner__ == opponent and dest_point.__count__ == 1:
             # Golpe: enviar ficha oponente a la barra.
             self.__bar__[opponent] += 1
@@ -323,103 +323,60 @@ class Board:
 
     ## Fin de métodos auxiliares.
 
+    ## Inicio de método «__apply_move__».
+
     def __apply_move__(self, src: int, dst: int, player: str) -> bool:
         """
-        Aplica un movimiento de src a dst para el jugador, incluyendo barra y retiro.
+        Aplica un movimiento de origen (src) a destino (dst) para el jugador indicado.
 
-        Args:
-            src (int): Índice del punto de origen (-1 para barra, 0 a 23 para puntos).
-            dst (int): Índice del punto de destino (-1 para retiro de O, 0 a 23 para puntos, 24 para retiro de X).
-            player (str): Jugador ('X' o 'O').
+        Se contemplan:
+            - Movimientos normales.
+            - Movimientos desde la barra.
+            - Golpes a fichas del oponente.
+            - Retiro de fichas del tablero.
 
         Returns:
-            bool: True si el movimiento fue exitoso, False si no es válido.
-
-        Reglas implementadas:
-        - Si hay fichas en la barra, no se permiten movimientos desde el tablero.
-        - Permite mover desde la barra (src = -1) al punto correcto según el jugador.
-        - Permite retirar fichas (dst = 24 para X, dst = -1 para O) si todas están en el cuarto final.
-        - No permite mover desde un punto vacío o de otro jugador.
-        - Bloquea mover a un punto con 2+ fichas del oponente.
-        - Si hay una ficha del oponente, la golpea (se envía a la barra).
-        - Valida la dirección del movimiento (X: hacia puntos mayores, O: hacia puntos menores).
-
-        Nota: La validación del valor del dado se maneja en dice.py.
+            bool: True si el movimiento fue ejecutado correctamente, False si no fue válido.
         """
-        # Validación de índices.
-        if src < -1 or src >= 24 or dst < -1 or dst > 24:
+        if not self.__validate_move__(src, dst, player):
             return False
 
-        # Prioridad de la barra: no permitir movimientos desde el tablero si hay fichas en la barra.
-        if self.__bar__[player] > 0 and src >= 0:
-            return False
-
-        # Validación de movimientos desde la barra.
-        if src == -1:
-            if self.__bar__[player] == 0:
-                return False  # No hay fichas en la barra.
-            dest_point = self.__points__[dst] if dst in range(24) else None
-            opponent = 'O' if player == 'X' else 'X'
-            if dest_point and dest_point.__owner__ == opponent and dest_point.__count__ >= 2:
-                return False  # Destino bloqueado.
-        else:
-            # Validar que el punto de origen pertenece al jugador.
-            if not self.__is_point_owned_by__(src, player):
-                return False
-            # Validar la dirección del movimiento (no aplica para retiro).
-            if dst < 24 and player == 'X' and dst <= src:
-                return False
-            if dst >= 0 and player == 'O' and dst >= src:
-                return False
-
-        # Validación del retiro de fichas.
+        # Retiro de fichas (bear off).
         if (player == 'X' and dst == 24) or (player == 'O' and dst == -1):
-            if not self.__can_bear_off__(player):
-                return False  # No todas las fichas están en el cuarto final.
-            # Retirar ficha.
-            if src == -1:
-                self.__bar__[player] -= 1
-            else:
-                try:
-                    self.__points__[src].__count__ -= 1
-                    if self.__points__[src].__count__ == 0:
-                        self.__points__[src].__owner__ = None
-                except ValueError:
-                    return False
-            self.__off__[player] += 1
-            return True
+            return self.__perform_bear_off__(src, player)
 
-        # Validación del destino (no bloqueado).
-        dest_point = self.__points__[dst]
-        opponent = 'O' if player == 'X' else 'X'
-        if dest_point.__owner__ == opponent and dest_point.__count__ >= 2:
-            return False
+        # Movimiento normal o golpe.
+        return self.__perform_hit_or_move__(src, dst, player)
 
-        # Remover ficha del origen.
-        if src == -1:
-            self.__bar__[player] -= 1
-        else:
-            try:
-                self.__points__[src].__count__ -= 1
-                if self.__points__[src].__count__ == 0:
-                    self.__points__[src].__owner__ = None
-            except ValueError:
-                return False
+    ## Fin del método «__apply_move__».
 
-        # Resolver destino: golpe o movimiento normal.
-        if dest_point.__owner__ == opponent and dest_point.__count__ == 1:
-            # Golpear ficha y mandarla a la barra.
-            self.__bar__[opponent] += 1
-            self.__points__[dst].__owner__ = player
-            self.__points__[dst].__count__ = 1
-        else:
-            if dest_point.__count__ == 0:
-                self.__points__[dst].__owner__ = player
-                self.__points__[dst].__count__ = 1
-            else:
-                self.__points__[dst].__count__ += 1
+    ## Inicio de método «__check_victory__».
 
-        return True
+    def __check_victory__(self, player: str) -> bool:
+        """
+        Verifica si el jugador ha ganado (todas las fichas retiradas del tablero).
+
+        Args:
+            player (str): Jugador ('X' o 'O').
+        Returns:
+            bool: True si el jugador retiró sus 15 fichas.
+        """
+        return self.__off__[player] >= 15
+
+    ## Fin de método «__check_victory__».
+
+    ## Inicio de método «__str__».
+
+    def __str__(self) -> str:
+        """
+        Devuelve una representación textual del tablero.
+
+        Se usa para depuración y visualización en la Interfaz de línea de comandos.
+        No imprime directamente, solo genera una cadena representativa del estado.
+        """
+        return " ".join(str(p) for p in self.__points__)
+
+    ## Fin de método «__str__».
 
 ### Fin de la clase «Board».
 
