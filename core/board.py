@@ -6,20 +6,25 @@ Carrera: Ingeniería en Informática.
 Ruta: "computacion-2025-backgammon-EnzoAguirre04/core/board.py".
 """
 
-### Inicio del código.
+#### Inicio del código.
 
-## Inicio de imports.
+### Inicio de imports.
 
 from dataclasses import dataclass
 from typing import Optional, List
 
-## Fin de imports.
+### Fin de imports.
 
-## Inicio de la clase «Point».
+### Inicio de la clase «Point».
 
 @dataclass
 class Point:
-    """Representa un punto (casilla) del tablero."""
+    """
+    Representa un punto (casilla) del tablero de Backgammon.
+    
+    Cada punto puede contener fichas de un único jugador ('X' u 'O'), o estar vacío (None).
+    La clase se encarga de mantener la coherencia del conteo y validar que no existan valores negativos.
+    """
     
     __owner__: Optional[str]
     __count_internal__: int = 0
@@ -73,18 +78,27 @@ class Point:
             return " . "
         return f"{self.__owner__}{self.__count__}"
 
-## Fin de la clase «Point».
+### Fin de la clase «Point».
 
-## Inicio de la clase «Board».
+### Inicio de la clase «Board».
 
 class Board:
     """
     Representa el tablero de Backgammon.
-    - Contiene 24 puntos numerados (0 a 23).
-    - Mantiene registro de fichas en la barra y fichas retiradas.
-    - Permite aplicar movimientos simples, desde la barra, y retiro de fichas.
-    - Valida reglas del tablero (índices, propiedad, dirección, bloqueo).
+
+    Atributos:
+        __points__ (List[Point]): Lista de 24 puntos del tablero (índices 0 a 23).
+        __bar__ (dict): Fichas en la barra, por jugador.
+        __off__ (dict): Fichas retiradas del juego (fuera del tablero).
+
+    Responsabilidades:
+        - Mantener la disposición del tablero y su estado general.
+        - Validar y aplicar movimientos según las reglas del juego.
+        - Gestionar fichas en la barra y retiradas.
+        - Cumplir con principios SOLID separando responsabilidades internas.
     """
+
+    ## Inicio del método «__init__».
 
     def __init__(self):
         """Inicializa un tablero vacío y lo coloca en la configuración estándar."""
@@ -93,8 +107,23 @@ class Board:
         self.__off__ = {"X": 0, "O": 0}  # Fichas retiradas del juego.
         self.__reset_to_standard__()
 
+    ## Fin del método «__init__».
+
+    ## Inicio del método «__reset_to_standard__».
+
     def __reset_to_standard__(self):
-        """Coloca las fichas en la configuración inicial estándar de Backgammon."""
+        """Coloca las fichas en la configuración inicial estándar de Backgammon.
+        
+        Esta configuración corresponde a la disposición tradicional:
+        - 2 fichas de 'X' en el punto 1.
+        - 5 fichas de 'X' en el punto 12.
+        - 3 fichas de 'X' en el punto 17.
+        - 5 fichas de 'X' en el punto 19.
+        - 2 fichas de 'O' en el punto 24.
+        - 5 fichas de 'O' en el punto 13.
+        - 3 fichas de 'O' en el punto 8.
+        - 5 fichas de 'O' en el punto 6.
+        """
         # Limpiar el tablero.
         for i in range(24):
             self.__points__[i] = Point(None, 0)
@@ -113,6 +142,10 @@ class Board:
         for idx, owner, cnt in layout:
             self.__points__[idx].__owner__ = owner
             self.__points__[idx].__count__ = cnt
+
+    ## Fin del método «__reset_to_standard__».
+
+    ## Inicio de los métodos utilitarios.
 
     def __is_point_owned_by__(self, index: int, player: str) -> bool:
         """
@@ -178,6 +211,117 @@ class Board:
             int: Número de fichas retiradas.
         """
         return self.__off__[player]
+    
+    ## Fin de los métodos utilitarios.
+
+    ## Inicio de métodos auxiliares.
+
+    def __validate_move__(self, src: int, dst: int, player: str) -> bool:
+        """
+        Valida un movimiento antes de aplicarlo.
+
+        Reglas validadas:
+            - Rango de índices permitido.
+            - Prioridad de fichas en la barra.
+            - Bloqueo de puntos del oponente.
+            - Dirección del movimiento según el jugador.
+
+        Returns:
+            bool: True si el movimiento es válido, False si infringe alguna regla.
+        """
+        if src < -1 or src >= 24 or dst < -1 or dst > 24:
+            return False
+        if self.__bar__[player] > 0 and src >= 0:
+            return False
+
+        opponent = 'O' if player == 'X' else 'X'
+
+        if src == -1:
+            if self.__bar__[player] == 0:
+                return False
+            dest_point = self.__points__[dst] if dst in range(24) else None
+            if dest_point and dest_point.__owner__ == opponent and dest_point.__count__ >= 2:
+                return False
+        else:
+            if not self.__is_point_owned_by__(src, player):
+                return False
+            if dst < 24 and player == 'X' and dst <= src:
+                return False
+            if dst >= 0 and player == 'O' and dst >= src:
+                return False
+
+        return True
+
+    def __perform_bear_off__(self, src: int, player: str) -> bool:
+        """
+        Ejecuta el retiro de fichas del tablero (bear off) si las condiciones lo permiten.
+
+        Args:
+            src (int): Índice de origen o -1 si viene desde la barra.
+            player (str): Jugador que intenta retirar la ficha.
+        Returns:
+            bool: True si el retiro fue exitoso, False en caso contrario.
+        """
+        if not self.__can_bear_off__(player):
+            return False
+
+        if src == -1:
+            self.__bar__[player] -= 1
+        else:
+            try:
+                self.__points__[src].__count__ -= 1
+                if self.__points__[src].__count__ == 0:
+                    self.__points__[src].__owner__ = None
+            except ValueError:
+                return False
+
+        self.__off__[player] += 1
+        return True
+
+    def __perform_hit_or_move__(self, src: int, dst: int, player: str) -> bool:
+        """
+        Aplica un movimiento estándar o golpe según el estado del punto destino.
+
+        Args:
+            src (int): Punto de origen (-1 si desde barra).
+            dst (int): Punto de destino (0-23).
+            player (str): Jugador que realiza la jugada.
+        Returns:
+            bool: True si la jugada fue válida y aplicada, False si no fue posible.
+        """
+        opponent = 'O' if player == 'X' else 'X'
+        dest_point = self.__points__[dst]
+
+        if dest_point.__owner__ == opponent and dest_point.__count__ >= 2:
+            return False
+
+        # Quitar ficha del origen
+        if src == -1:
+            self.__bar__[player] -= 1
+        else:
+            try:
+                self.__points__[src].__count__ -= 1
+                if self.__points__[src].__count__ == 0:
+                    self.__points__[src].__owner__ = None
+            except ValueError:
+                return False
+
+        # Resolver el destino
+        if dest_point.__owner__ == opponent and dest_point.__count__ == 1:
+            # Golpe: enviar ficha oponente a la barra.
+            self.__bar__[opponent] += 1
+            self.__points__[dst].__owner__ = player
+            self.__points__[dst].__count__ = 1
+        else:
+            if dest_point.__count__ == 0:
+                self.__points__[dst].__owner__ = player
+                self.__points__[dst].__count__ = 1
+            else:
+                self.__points__[dst].__count__ += 1
+
+        return True
+
+    ## Fin de métodos auxiliares.
 
     def __apply_move__(self, src: int, dst: int, player: str) -> bool:
         """
@@ -277,6 +421,6 @@ class Board:
 
         return True
 
-## Fin de la clase «Board».
+### Fin de la clase «Board».
 
-### Fin del código.
+#### Fin del código.
